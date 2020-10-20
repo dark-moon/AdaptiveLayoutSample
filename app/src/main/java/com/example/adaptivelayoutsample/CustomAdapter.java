@@ -20,15 +20,27 @@ import java.util.Map;
 public class CustomAdapter extends ArrayAdapter {
 
     Context context;
+    Product[] products;
 
-    public CustomAdapter(@NonNull Context context, @NonNull Product[] objects) {
-        super(context, R.layout.product_item, objects);
+    public CustomAdapter(@NonNull Context context, Product[] products) {
+        super(context, R.layout.product_item, products);
         this.context = context;
+        this.products = products;
+    }
+
+    public void setDataSource(Product[] products){
+        this.products = products;
     }
 
     @Override
     public int getCount() {
         return super.getCount();
+    }
+
+    @Nullable
+    @Override
+    public Product getItem(int position) {
+        return products[position];
     }
 
     @NonNull
@@ -39,8 +51,12 @@ public class CustomAdapter extends ArrayAdapter {
         TextView tvItem = view.findViewById(R.id.item_name);
         TextView tvDescription = view.findViewById(R.id.item_description);
 
-        tvItem.setText(((Product) getItem(position)).getName());
-        tvDescription.setText(((Product) getItem(position)).getDescription());
+        tvItem.setText(getItem(position).getName());
+        tvDescription.setText(getItem(position).getDescription());
         return view;
     }
 }
+
+// getCount()
+// getItem(int position)
+// getView()
