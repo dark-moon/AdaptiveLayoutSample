@@ -1,13 +1,14 @@
 package com.example.adaptivelayoutsample;
 
 public class Product {
+    private int _id;
     private String name;
+    private String description;
 
     public Product() {
 
     }
 
-    private String description;
 
     public Product(String name, String description) {
         this.name = name;

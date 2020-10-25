@@ -1,81 +1,65 @@
 package com.example.adaptivelayoutsample;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.app.LauncherActivity;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.adaptivelayoutsample.data.DbProductsHandler;
+import com.example.adaptivelayoutsample.helper.BackgroundThread;
 import com.google.android.material.textview.MaterialTextView;
+
+import org.w3c.dom.Text;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "Main Activity";
-    private ListView listServices;
+    private EditText txtName, txtDescription;
+    private Button btnSave, btnCancel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        initViews();
 
-        Button btnNavigate = findViewById(R.id.btn_navigate);
-        btnNavigate.setOnClickListener(v -> {
-            startActivity(new Intent(MainActivity.this, ProductsActivity.class));
+        BackgroundThread backgroundThread = new BackgroundThread();
+        backgroundThread.start();
+
+        DbProductsHandler databaseHandler = new DbProductsHandler(MainActivity.this);
+        SQLiteDatabase db = databaseHandler.getWritableDatabase();
+
+
+        btnSave.setOnClickListener(view -> {
+            BackgroundThread.MyHandler handler = backgroundThread.getHandler();
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    databaseHandler.insetProduct(new Product(txtName.getText().toString(), txtDescription.getText().toString()));
+                }
+            });
+            MainActivity.this.startActivity(new Intent(MainActivity.this, ProductsActivity.class));
         });
+    }
 
-        String[] services = {"Web Applications",
-                "Mobile Applications",
-                "Machine Learning",
-                "Translation"
-        };
-
-        Product[] products = {
-                new Product("HP Pavillion", "HP Laptop"),
-                new Product("MacBook Pro 13`", "Apple notebook"),
-                new Product("MacBook Pro 13`", "Apple notebook"),
-                new Product("MacBook Pro 13`", "Apple notebook"),
-                new Product("MacBook Pro 13`", "Apple notebook"),
-                new Product("MacBook Pro 13`", "Apple notebook"),
-                new Product("MacBook Pro 13`", "Apple notebook"),
-                new Product("MacBook Pro 13`", "Apple notebook"),
-                new Product("MacBook Pro 13`", "Apple notebook"),
-                new Product("MacBook Pro 13`", "Apple notebook"),
-                new Product("MacBook Pro 13`", "Apple notebook"),
-                new Product("MacBook Pro 13`", "Apple notebook"),
-                new Product("Microsoft Mouse", "Wireless mouse from Microsoft"),
-                new Product("Microsoft Mouse", "Wireless mouse from Microsoft"),
-                new Product("Microsoft Mouse", "Wireless mouse from Microsoft"),
-                new Product("Microsoft Mouse", "Wireless mouse from Microsoft"),
-                new Product("Microsoft Mouse", "Wireless mouse from Microsoft"),
-                new Product("Microsoft Mouse", "Wireless mouse from Microsoft"),
-                new Product("Microsoft Mouse", "Wireless mouse from Microsoft"),
-                new Product("Microsoft Mouse", "Wireless mouse from Microsoft"),
-                new Product("Microsoft Mouse", "Wireless mouse from Microsoft"),
-                new Product("Magic Mouse", "Apple magic mouse"),
-        } ;
-
-        listServices = findViewById(R.id.list_services);
-
-        ListAdapter listAdapter = new ArrayAdapter(this,  android.R.layout.simple_list_item_1, services);
-
-        CustomAdapter productAdapter = new CustomAdapter(this, products);
-//        productAdapter.setDataSource(products);
-
-        listServices.setAdapter(productAdapter);
-
-//        listServices.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-////                Log.i(TAG, "onItemClick: " + view.toString() + ", Position: "  + position
-////                + ", id: " + id);
-//                Log.i(TAG, "onItemClick: " + ((TextView) view).getText());
-//            }
-//        });
+    private void initViews() {
+        txtName = findViewById(R.id.txt_name);
+        txtDescription = findViewById(R.id.txt_description);
+        btnSave = findViewById(R.id.btn_save);
+        btnCancel = findViewById(R.id.btnCancel);
     }
 }
