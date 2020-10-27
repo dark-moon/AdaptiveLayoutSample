@@ -8,6 +8,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.adaptivelayoutsample.data.Product;
+
 import java.util.List;
 
 public class ProductRecyclerAdapter extends RecyclerView.Adapter<ProductRecyclerAdapter.ProductViewHolder> {
@@ -15,9 +17,13 @@ public class ProductRecyclerAdapter extends RecyclerView.Adapter<ProductRecycler
     List<Product> products;
     OnProductClickListener itemClickListener;
 
-    public ProductRecyclerAdapter(List<Product> products, OnProductClickListener itemClickListener) {
+    public ProductRecyclerAdapter(List<Product> products) {
         this.products = products;
-        this.itemClickListener = itemClickListener;
+        this.itemClickListener = (id, name, description) -> { };
+    }
+
+    public void setOnProductClickListener(OnProductClickListener listener) {
+        this.itemClickListener = listener;
     }
 
     @NonNull
@@ -29,13 +35,19 @@ public class ProductRecyclerAdapter extends RecyclerView.Adapter<ProductRecycler
 
     @Override
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
-        holder.txtName.setText(products.get(position).getName());
-        holder.txtDescription.setText(products.get(position).getDescription());
+        holder.txtName.setTag(products.get(position)._id);
+        holder.txtName.setText(products.get(position).name);
+        holder.txtDescription.setText(products.get(position).description);
     }
 
     @Override
     public int getItemCount() {
         return products.size();
+    }
+
+    public void setProducts(List<Product> products) {
+        this.products = products;
+        notifyDataSetChanged();
     }
 
 
@@ -48,11 +60,11 @@ public class ProductRecyclerAdapter extends RecyclerView.Adapter<ProductRecycler
             super(itemView);
             txtName = itemView.findViewById(R.id.item_name);
             txtDescription = itemView.findViewById(R.id.item_description);
-            itemView.setOnClickListener(v -> listener.onClick(txtName, txtDescription));
+            itemView.setOnClickListener(v -> listener.onClick((int) txtName.getTag(), txtName.getText().toString(), txtDescription.getText().toString()));
         }
 
     }
     public interface OnProductClickListener {
-        public void onClick(TextView tvName, TextView tvDescription);
+        public void onClick(int id, String name, String description);
     }
 }
