@@ -6,7 +6,10 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-@Database(version = 1, entities = {Product.class}, exportSchema = false)
+import com.example.adaptivelayoutsample.data.entities.Category;
+import com.example.adaptivelayoutsample.data.entities.Product;
+
+@Database(version = 1, entities = {Product.class, Category.class}, exportSchema = false)
 public abstract class ProductsDatabase extends RoomDatabase {
 
     private static volatile ProductsDatabase instance;
@@ -27,4 +30,5 @@ public abstract class ProductsDatabase extends RoomDatabase {
     }
 
     public abstract ProductDao productDao();
+    public abstract CategoryDao categoryDao();
 }

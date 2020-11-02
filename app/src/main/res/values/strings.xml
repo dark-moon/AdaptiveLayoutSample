@@ -1,4 +1,12 @@
 <resources>
     <string name="app_name">AdaptiveLayoutSample</string>
     <string name="add_new_product">Add new product</string>
+    <string name="category_name">Category Name</string>
+    <string name="category_description">Category description goes here...</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="add_category">Add a new category</string>
+    <string name="product_name">Product name</string>
+    <string name="description">Description</string>
+    <string name="home_appliances">home appliances</string>
 </resources>

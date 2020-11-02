@@ -16,7 +16,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:ems="10"
-        android:hint="Product name"
+        android:hint="@string/product_name"
         android:inputType="textPersonName"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -32,7 +32,7 @@
         android:layout_marginBottom="16dp"
         android:ems="10"
         android:gravity="start|top"
-        android:hint="Description"
+        android:hint="@string/description"
         android:inputType="textMultiLine"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/txt_name"
@@ -46,7 +46,7 @@
         android:layout_height="47dp"
         android:layout_marginEnd="9dp"
         android:layout_marginBottom="16dp"
-        android:text="Save"
+        android:text="@string/save"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/txt_name"
         app:layout_constraintTop_toBottomOf="@+id/txt_description" />
@@ -55,7 +55,7 @@
         android:id="@+id/btnCancel"
         android:layout_width="158dp"
         android:layout_height="50dp"
-        android:text="Cancel"
+        android:text="@string/cancel"
         app:layout_constraintBaseline_toBaselineOf="@+id/btn_save"
         app:layout_constraintStart_toStartOf="@+id/txt_name" />
 </androidx.constraintlayout.widget.ConstraintLayout>

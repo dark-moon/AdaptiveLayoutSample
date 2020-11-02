@@ -6,6 +6,10 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
+import com.example.adaptivelayoutsample.data.entities.Category;
+import com.example.adaptivelayoutsample.data.entities.CategoyWithProducts;
+import com.example.adaptivelayoutsample.data.entities.Product;
+
 import java.util.List;
 
 @Dao

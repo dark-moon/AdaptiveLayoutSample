@@ -8,7 +8,7 @@ import android.widget.EditText;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.adaptivelayoutsample.R;
-import com.example.adaptivelayoutsample.data.Product;
+import com.example.adaptivelayoutsample.data.entities.Product;
 import com.example.adaptivelayoutsample.data.ProductDao;
 import com.example.adaptivelayoutsample.data.ProductsDatabase;
 
@@ -32,14 +32,17 @@ public class AddProductActivity extends AppCompatActivity {
 
 
         Intent intent = getIntent();
-        if (intent.getExtras() != null) {
+        int categoryId = intent.getIntExtra("categoryId", -1);
+        if (intent.getExtras().getString("productName") != null) {
             int id = intent.getIntExtra("productId", 0);
             String name = intent.getStringExtra("productName");
             String description = intent.getStringExtra("productDescription");
+            Double price = intent.getDoubleExtra("price", 0.0);
             txtName.setText(name);
             txtDescription.setText(description);
-            productToUpdate = new Product(id, name, description);
+            productToUpdate = new Product(id, name, description, price, categoryId);
         }
+
 
         ProductDao productDao = ProductsDatabase.getInstance(this).productDao();
 
@@ -47,15 +50,18 @@ public class AddProductActivity extends AppCompatActivity {
             AddProductActivity.this.startActivity(new Intent(AddProductActivity.this, ProductsActivity.class));
             background.execute(() -> {
                 if (productToUpdate == null) {
-                    productDao.insert(new Product(txtName.getText().toString(), txtDescription.getText().toString()));
+                    Product product = new Product(txtName.getText().toString(), txtDescription.getText().toString());
+                    product.setCategory_id(categoryId);
+                    productDao.insert(product);
                 } else {
-                    productToUpdate.name = txtName.getText().toString();
-                    productToUpdate.description = txtDescription.getText().toString();
+                    productToUpdate.setName(txtName.getText().toString());
+                    productToUpdate.setDescription(txtDescription.getText().toString());
                     productDao.update(productToUpdate);
                 }
             });
             finish();
         });
+
     }
 
     private void initViews() {
@@ -63,5 +69,9 @@ public class AddProductActivity extends AppCompatActivity {
         txtDescription = findViewById(R.id.txt_description);
         btnSave = findViewById(R.id.btn_save);
         btnCancel = findViewById(R.id.btnCancel);
+
+        btnCancel.setOnClickListener(v -> {
+            finish();
+        });
     }
 }

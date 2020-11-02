@@ -1,14 +1,14 @@
 package com.example.adaptivelayoutsample;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.adaptivelayoutsample.data.Product;
+import com.example.adaptivelayoutsample.data.entities.Product;
+import com.example.adaptivelayoutsample.databinding.ProductItemBinding;
 
 import java.util.List;
 
@@ -29,15 +29,18 @@ public class ProductRecyclerAdapter extends RecyclerView.Adapter<ProductRecycler
     @NonNull
     @Override
     public ProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.product_item, parent, false);
-        return new ProductViewHolder(view, itemClickListener);
+        ProductItemBinding binding =
+                DataBindingUtil.inflate(
+                        LayoutInflater.from(parent.getContext()),
+                        R.layout.product_item,
+                        parent,
+                        false);
+        return new ProductViewHolder(binding, itemClickListener);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
-        holder.txtName.setTag(products.get(position)._id);
-        holder.txtName.setText(products.get(position).name);
-        holder.txtDescription.setText(products.get(position).description);
+        holder.binding.setProduct(products.get(position));
     }
 
     @Override
@@ -53,14 +56,12 @@ public class ProductRecyclerAdapter extends RecyclerView.Adapter<ProductRecycler
 
     public static class ProductViewHolder extends RecyclerView.ViewHolder {
 
-        final public TextView txtName;
-        final public TextView txtDescription;
+        final ProductItemBinding binding;
 
-        public ProductViewHolder(@NonNull View itemView, ProductRecyclerAdapter.OnProductClickListener listener) {
-            super(itemView);
-            txtName = itemView.findViewById(R.id.item_name);
-            txtDescription = itemView.findViewById(R.id.item_description);
-            itemView.setOnClickListener(v -> listener.onClick((int) txtName.getTag(), txtName.getText().toString(), txtDescription.getText().toString()));
+        public ProductViewHolder(@NonNull ProductItemBinding binding, ProductRecyclerAdapter.OnProductClickListener listener) {
+            super(binding.getRoot());
+            this.binding = binding;
+            itemView.setOnClickListener(v -> listener.onClick(binding.getProduct().get_id(), binding.getProduct().getName(), binding.getProduct().getDescription()));
         }
 
     }
